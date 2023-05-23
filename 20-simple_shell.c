@@ -49,16 +49,17 @@ int built_in(char **token, list_t *env, int num, char **command)
 	else if (_strcmp(token[0], "unsetenv") == 0)
 	{
 		_unsetenv(&env, token);
-		i = 1;
+		j = 1;
 	}
-	return (i);
+	return (j);
 }
 
 /**
- * ignore_space - return string without spaces in front
+ * ignore_space - return string without spaces
  * @str: string
  * Return: new string
  */
+
 char *ignore_space(char *str)
 {
 	while (*str == ' ')
@@ -67,63 +68,65 @@ char *ignore_space(char *str)
 }
 
 /**
- * ctrl_D - exits program if Ctrl-D was pressed
- * @i: characters read via get_line
+ * ctrl_D - exits program if Ctrl-D is pressed
+ * @i: characters read by get_line
  * @command: user's typed in command
  * @env: environmental variable linked list
  */
-void ctrl_D(int i, char *command, list_t *env)
+
+void ctrl_D(int j, char *command, list_t *env)
 {
-	if (i == 0) /* handles Ctrl+D */
+	if (j == 0)
 	{
-		free(command); /* exit with newline if in shell */
+		free(command);
 		free_linked_list(env);
-		if (isatty(STDIN_FILENO))/* ctrl+d prints newline */
+		if (isatty(STDIN_FILENO))
 			write(STDOUT_FILENO, "\n", 1);
 		exit(0);
 	}
 }
 
 /**
- * prompt - repeatedly prompts user and executes user's cmds if applicable
- * @en: envrionmental variables
- * Return: 0 on success
+ * prompt - repeatedly prompts user and executes user cmds if applicable
+ * @en: envrionmental variable
+ * Return: 0
  */
+
 int prompt(char **en)
 {
 	list_t *env;
-	size_t i = 0, n = 0;
+	size_t j = 0, n = 0;
 	int command_line_no = 0, exit_stat = 0;
 	char *command, *n_command, **token;
 
 	env = env_linked_list(en);
 	do {
 		command_line_no++;
-		if (isatty(STDIN_FILENO)) /* reprompt if in interactive shell */
+		if (isatty(STDIN_FILENO))
 			write(STDOUT_FILENO, "$ ", 2);
 		else
 			non_interactive(env);
-		signal(SIGINT, ctrl_c); /* makes ctrl+c not work */
-		command = NULL; i = 0; /* reset vars each time loop runs */
-		i = get_line(&command); /* read user's cmd in stdin */
-		ctrl_D(i, command, env); /* exits shell if ctrl-D */
+		signal(SIGINT, ctrl_c);
+		command = NULL; j = 0;
+		j = get_linee(&command);
+		ctrl_D(j, command, env);
 		n_command = command;
 		command = ignore_space(command);
 		n = 0;
-		while (command[n] != '\n') /* replace get_line's \n with \0 */
+		while (command[n] != '\n')
 			n++;
 		command[n] = '\0';
-		if (command[0] == '\0') /* reprompt if user hits enter only */
+		if (command[0] == '\0')
 		{
 			free(n_command); continue;
 		}
-		token = NULL; token = _str_tok(command, " "); /*token user cmd*/
+		token = NULL; token = _str_tok(command, " ");
 		if (n_command != NULL)
 			free(n_command);
 		exit_stat = built_in(token, env, command_line_no, NULL);
 		if (exit_stat)
 			continue;
 		exit_stat = _execve(token, env, command_line_no);
-	} while (1); /* keep on repeating till user exits shell */
+	} while (1);
 	return (exit_stat);
 }
