@@ -24,7 +24,7 @@ void non_interactive(list_t *env)
 	int command_line_no = 0, exit_stat = 0;
 	char *command = NULL, *n_command = NULL, **n_line, **token;
 
-	j = get_line(&command);
+	j = get_linee(&command);
 	if (j == 0)
 	{
 		free(command);
