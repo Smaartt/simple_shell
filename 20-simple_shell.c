@@ -74,7 +74,7 @@ char *ignore_space(char *str)
  * @env: environmental variable linked list
  */
 
-void ctrl_D(int i, char *command, list_t *env)
+void ctrl_D(int j, char *command, list_t *env)
 {
 	if (j == 0)
 	{
@@ -108,7 +108,7 @@ int prompt(char **en)
 			non_interactive(env);
 		signal(SIGINT, ctrl_c);
 		command = NULL; j = 0;
-		j = get_line(&command);
+		j = get_linee(&command);
 		ctrl_D(j, command, env);
 		n_command = command;
 		command = ignore_space(command);
