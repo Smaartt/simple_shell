@@ -29,9 +29,9 @@ typedef struct list
 int prompt(char **env);
 void *_realloc(void *ptr, unsigned int old_sizee, unsigned int new_sizee);
 size_t get_linee(char **strr);
-int t_strlen(char *str, int pos, char delm);
+int t_strlen(char *strr, int poss, char delmm);
 char *ignore_space(char *str);
-char **_str_tok(char *str, char *delm);
+char **_str_tokk(char *strr, char *delmm);
 char **c_str_tok(char *str, char *delm);
 char *_strcat(char *destt, char *srcc);
 char *_strdup(char *str);
