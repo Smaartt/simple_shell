@@ -14,7 +14,7 @@ char *c_ignore(char *str)
 }
 
 /**
- * non_interactive - handles when user pipes commands into shell via pipeline
+ * non_interactivee - handles when user pipes commands into shell via pipeline
  * @env: envrionmental variable
  */
 

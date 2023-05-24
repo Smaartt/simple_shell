@@ -69,7 +69,7 @@ char *ignore_space(char *str)
 
 /**
  * ctrl_D - exits program if Ctrl-D is pressed
- * @i: characters read by get_line
+ * @j: characters read by get_line
  * @command: user's typed in command
  * @env: environmental variable linked list
  */
@@ -87,8 +87,8 @@ void ctrl_D(int j, char *command, list_t *env)
 }
 
 /**
- * promptt -function  repeatedly prompts user and executes user cmds if applicable
- * @en: envrionmental variable
+ * promptt -function that  repeatedly prompts user
+ * @en: argument envrionmental variable
  * Return: 0
  */
 
@@ -107,7 +107,8 @@ int promptt(char **en)
 		else
 			non_interactivee(env);
 		signal(SIGINT, ctrl_c);
-		command = NULL; j = 0;
+		command = NULL;
+		j = 0;
 		j = get_linee(&command);
 		ctrl_D(j, command, env);
 		n_command = command;
@@ -118,9 +119,11 @@ int promptt(char **en)
 		command[n] = '\0';
 		if (command[0] == '\0')
 		{
-			free(n_command); continue;
+			free(n_command);
+			continue;
 		}
-		token = NULL; token = c_str_tok(command, " ");
+		token = NULL;
+		token = c_str_tok(command, " ");
 		if (n_command != NULL)
 			free(n_command);
 		exit_stat = built_in(token, env, command_line_no, NULL);
