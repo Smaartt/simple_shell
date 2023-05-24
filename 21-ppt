@@ -1,0 +1,126 @@
+#include "shell.h"
+
+/**
+ * ctrl_c - function that ignore Ctrl-C input and prints prompt again
+ * @m: argument takes in int from signal
+ */
+void ctrl_c(int m)
+{
+	(void)m;
+	write(STDOUT_FILENO, "\n$ ", 3);
+}
+
+/**
+ * built_in - function that handles builtins (exit, env, cd)
+ * @token: argument user's typed command
+ * @env: argument/environmental variable
+ * @numm: argument take in nth user command typed to write error message
+ * @commandd: argument bring in command to free
+ * Return: it will return 1 if acted on builtin, 0 if not
+ */
+int built_in(char **token, list_t *env, int numm, char **commandd)
+{
+	int j = 0;
+
+	if (_strcmp(token[0], "exit") == 0)
+	{
+		j = __exit(token, env, numm, commandd);
+	}
+	else if (_strcmp(token[0], "env") == 0)
+	{
+		_env(token, env);
+		j = 1;
+	}
+	else if (_strcmp(token[0], "cd") == 0)
+	{
+		j = _cd(token, env, numm);
+	}
+	else if (_strcmp(token[0], "setenv") == 0)
+	{
+		_setenv(&env, token);
+		j = 1;
+	}
+	else if (_strcmp(token[0], "unsetenv") == 0)
+	{
+		_unsetenv(&env, token);
+		j = 1;
+	}
+	return (j);
+}
+
+/**
+ * ignore_space - will return string without spaces in front
+ * @strr: argument
+ * Return: alwyas new string
+ */
+char *ignore_space(char *strr)
+{
+	while (*strr == ' ')
+		strr++;
+	return (strr);
+}
+
+/**
+ * ctrl_D - function exits program if Ctrl-D is pressed
+ * @j: arguments characters read via get_line
+ * @commandd: arguments typed in command
+ * @env: arg environmental variable linked list
+ */
+void ctrl_D(int j, char *commandd, list_t *env)
+{
+	if (j == 0)
+	{
+		free(commandd);
+		free_linked_list(env);
+		if (isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, "\n", 1);
+		exit(0);
+	}
+}
+
+/**
+ * prompt - repeatedly prompts user and executes user's cmds if applicable
+ * @en: envrionmental variables
+ * Return: 0 on success
+ */
+int promptt(char **en)
+{
+	list_t *env;
+	size_t j = 0, m = 0;
+	int command_line_noo = 0, exit_statt = 0;
+	char *commandd, *n_commandd, **token;
+
+	env = env_linked_list(en);
+	do {
+		command_line_noo++;
+		if (isatty(STDIN_FILENO))
+			write(STDOUT_FILENO, "$ ", 2);
+		else
+			non_interactivee(env);
+		signal(SIGINT, ctrl_c);
+		commandd = NULL;
+		j = 0;
+		j = get_linee(&commandd);
+		ctrl_D(j, commandd, env);
+		n_commandd = commandd;
+		commandd = ignore_space(commandd);
+		m = 0;
+		while (commandd[m] != '\n')
+			m++;
+		commandd[m] = '\0';
+		if (commandd[0] == '\0')
+		{
+			free(n_commandd);
+			continue;
+		}
+		token = NULL;
+		token = c_str_tok(commandd, " ");
+		if (n_commandd != NULL)
+			free(n_commandd);
+		exit_statt = built_in(token, env, command_line_noo, NULL);
+		if (exit_statt)
+			continue;
+		exit_statt = _execve(token, env, command_line_noo);
+	} while (1);
+	return (exit_statt);
+}

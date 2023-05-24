@@ -37,7 +37,7 @@ int _execve(char **s, list_t *env, int num)
 
 	if (access(holder, X_OK) != 0)
 	{
-		not_found(s[0], num, env);
+		not_foundd(s[0], num, env);
 		free_double_ptr(s);
 		return (127);
 	}
@@ -48,7 +48,7 @@ int _execve(char **s, list_t *env, int num)
 		{
 			if (execve(holder, s, NULL) == -1)
 			{
-				not_found(s[0], num, env);
+				not_foundd(s[0], num, env);
 				c_exit(s, env);
 			}
 		}

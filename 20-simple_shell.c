@@ -42,13 +42,13 @@ int built_in(char **token, list_t *env, int num, char **command)
 
 	else if (_strcmp(token[0], "setenv") == 0)
 	{
-		_setenv(&env, token);
+		_setenvv(&env, token);
 		j = 1;
 	}
 
 	else if (_strcmp(token[0], "unsetenv") == 0)
 	{
-		_unsetenv(&env, token);
+		_unsetenvv(&env, token);
 		j = 1;
 	}
 	return (j);
@@ -87,12 +87,12 @@ void ctrl_D(int j, char *command, list_t *env)
 }
 
 /**
- * prompt - repeatedly prompts user and executes user cmds if applicable
+ * promptt -function  repeatedly prompts user and executes user cmds if applicable
  * @en: envrionmental variable
  * Return: 0
  */
 
-int prompt(char **en)
+int promptt(char **en)
 {
 	list_t *env;
 	size_t j = 0, n = 0;
@@ -105,7 +105,7 @@ int prompt(char **en)
 		if (isatty(STDIN_FILENO))
 			write(STDOUT_FILENO, "$ ", 2);
 		else
-			non_interactive(env);
+			non_interactivee(env);
 		signal(SIGINT, ctrl_c);
 		command = NULL; j = 0;
 		j = get_linee(&command);
@@ -120,7 +120,7 @@ int prompt(char **en)
 		{
 			free(n_command); continue;
 		}
-		token = NULL; token = _str_tok(command, " ");
+		token = NULL; token = c_str_tok(command, " ");
 		if (n_command != NULL)
 			free(n_command);
 		exit_stat = built_in(token, env, command_line_no, NULL);

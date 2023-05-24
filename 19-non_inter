@@ -1,0 +1,54 @@
+#include "shell.h"
+
+/**
+ * c_ignoree - function ignores spaces and newlines
+ * @strr: argument/envrionmental variables
+ * Return: always a new string
+ */
+char *c_ignoree(char *strr)
+{
+	while (*strr == ' ' || *strr == '\n')
+		strr++;
+	return (strr);
+}
+
+/**
+ * non_interactivee - will pipe commands into shell
+ * @env: environ variables
+ */
+void non_interactivee(list_t *env)
+{
+	size_t j = 0, m = 0;
+	int command_line_noo = 0, exit_statt = 0;
+	char *commandd = NULL, *n_commandd = NULL, **n_linee, **tokenn;
+
+	j = get_linee(&commandd);
+	if (j == 0)
+	{
+		free(commandd);
+		exit(0);
+	}
+	n_commandd = commandd;
+	commandd = c_ignoree(commandd);
+	n_linee = c_str_tok(commandd, "\n");
+	if (n_commandd != NULL)
+		free(n_commandd);
+	m = 0;
+	while (n_linee[m] != NULL)
+	{
+		command_line_noo++;
+		tokenn = NULL;
+		tokenn = c_str_tok(n_linee[m], " ");
+		exit_statt = built_in(tokenn, env, command_line_noo, n_linee);
+		if (exit_statt)
+		{
+			m++;
+			continue;
+		}
+		exit_statt = _execve(tokenn, env, command_line_noo);
+		m++;
+	}
+	free_double_ptr(n_linee);
+	free_linked_list(env);
+	exit(exit_statt);
+}

@@ -18,7 +18,7 @@ char *c_ignore(char *str)
  * @env: envrionmental variable
  */
 
-void non_interactive(list_t *env)
+void non_interactivee(list_t *env)
 {
 	size_t j = 0, n = 0;
 	int command_line_no = 0, exit_stat = 0;
@@ -32,7 +32,7 @@ void non_interactive(list_t *env)
 	}
 	n_command = command;
 	command = c_ignore(command);
-	n_line = _str_tok(command, "\n");
+	n_line = c_str_tok(command, "\n");
 	if (n_command != NULL)
 		free(n_command);
 	n = 0;
@@ -40,7 +40,7 @@ void non_interactive(list_t *env)
 	{
 		command_line_no++;
 		token = NULL;
-		token = _str_tok(n_line[n], " ");
+		token = c_str_tok(n_line[n], " ");
 		exit_stat = built_in(token, env, command_line_no, n_line);
 		if (exit_stat)
 		{
